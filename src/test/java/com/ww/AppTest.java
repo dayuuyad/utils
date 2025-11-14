@@ -134,6 +134,29 @@ public class AppTest
         String mergeFile = "D:\\download\\test\\out\\mv3.mp4";
         FileMerge.mergeVideo(list, new File(mergeFile));
     }
+    @Test
+    public void testSJS(){
+        int yzm = (int) (Math.random()*(999999-0)+0);
+        if(yzm<100000)
+        {
+            yzm=100000+yzm;
+        }
+        System.out.println(yzm);
 
+    }
+
+    @Test
+    public void testSJS2(){
+        int yzm = (int) (Math.random()*(400-0)+0);
+        if(yzm/2F>yzm/2)
+        {
+            yzm=yzm+1;
+        }
+
+//        System.out.println(256/2F>256/2);
+
+        System.out.println(yzm);
+
+    }
 
 }
