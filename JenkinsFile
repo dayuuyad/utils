@@ -1,0 +1,26 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('pull') {
+            steps {
+                git credentialsId: '12ff5dee-66f5-4fcc-8f99-563f88813d2c', url: 'git@github.com:dayuuyad/gitTest.git'
+            }
+        }
+        stage('build') {
+            steps {
+                powershell 'mvn clean package'
+            }
+        }
+    }
+
+    post {
+      always {
+        mail bcc: '', body: '''$PROJECT_NAME - Build # $BUILD_NUMBER - $BUILD_STATUS:
+
+Check console output at $BUILD_URL to view the results.''', cc: '', from: '', replyTo: '', subject: '$PROJECT_NAME - Build # $BUILD_NUMBER - $BUILD_STATUS!', to: '904977900@qq.com'
+      }
+    }
+
+
+}
