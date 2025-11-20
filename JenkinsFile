@@ -1,7 +1,18 @@
 pipeline {
     agent any
 
-
+    stages {
+        stage('pull') {
+            steps {
+                git credentialsId: '12ff5dee-66f5-4fcc-8f99-563f88813d2c', url: 'git@github.com:dayuuyad/utils.git'
+            }
+        }
+        stage('build') {
+            steps {
+                powershell 'mvn clean package'
+            }
+        }
+    }
 
     post {
       always {
