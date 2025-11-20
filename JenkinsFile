@@ -1,7 +1,13 @@
 pipeline {
     agent any
 
-
+    stages {
+        stage('test') {
+            steps {
+                powershell 'ls'
+            }
+        }
+    }
 
     post {
       always {
