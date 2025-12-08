@@ -18,7 +18,7 @@ pipeline {
             timeout(time: 30, unit: 'MINUTES') {
                 script {
                     // 获取并打印工具路径
-                    def scannerHome = tool 'SonarQubeScanner'
+                    def scannerHome = tool 'sonarqubeScanner'
                     echo "SonarScanner path: ${scannerHome}"
 
                     // 添加详细日志
