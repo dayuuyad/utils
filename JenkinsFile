@@ -18,7 +18,7 @@ pipeline {
                 // 使用withSonarQubeEnv会自动配置环境，直接调用sonar-scanner即可
                 withSonarQubeEnv('sonarqube') {
                     // 如果已经通过tools{}配置了sonarqubeScanner
-                    bat 'sonar-scanner'
+                    bat 'sonar-scanner --debug'
                 }
             }
         }
