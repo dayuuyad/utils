@@ -1,11 +1,6 @@
 pipeline {
     agent any
 
-    tools {
-        // 这里的名称要与Jenkins全局工具配置中的一致
-        sonarqubeScanner 'sonarqubeScanner'
-    }
-
     stages {
         stage('pull') {
             steps {
@@ -20,10 +15,13 @@ pipeline {
 
         stage('SonarQube Analysis') {
             steps {
-                // 使用withSonarQubeEnv会自动配置环境，直接调用sonar-scanner即可
+
+                script {
+                    scannerHome = tool 'sonarqubeScanner'
+                }
+                // 直接使用withSonarQubeEnv作为step
                 withSonarQubeEnv('sonarqube') {
-                    // 如果已经通过tools{}配置了sonarqubeScanner
-                    bat 'sonar-scanner.bat'
+                    bat '${scannerHome}/bin/sonar-scanner.bat'
                 }
             }
         }
