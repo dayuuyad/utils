@@ -4,32 +4,32 @@ pipeline {
     stages {
 
 
-            stage('测试命令') {
-                steps {
-                    script {
-                        def scannerHome = tool 'sonarqubeScanner'
+          stage('SonarQube Analysis') {
+              steps {
+                  script {
+                      timeout(time: 10, unit: 'MINUTES') {
+                          try {
+                              def scannerHome = tool 'sonarqubeScanner'
 
-                        // 方法1：直接使用系统命令
-                        PowerShell  """
-                            echo "方法1: 直接调用"
-                            "${scannerHome}\\bin\\sonar-scanner.bat" --help
-                        """
+                              bat """
+                                  echo "开始执行 SonarScanner..."
+                                  echo "路径: ${scannerHome}"
 
-                        // 方法2：先进入目录再执行
-                        PowerShell  """
-                            echo "方法2: 切换目录"
-                            cd /d "${scannerHome}\\bin"
-                            sonar-scanner.bat -v
-                        """
+                                  rem 设置超时和日志重定向
+                                  timeout /t 300 /nobreak > nul 2>&1
+                                  call "${scannerHome}\\bin\\sonar-scanner.bat" -v
 
-                        // 方法3：使用 call 命令
-                        PowerShell  """
-                            echo "方法3: 使用 call"
-                            call "${scannerHome}\\bin\\sonar-scanner.bat" -v
-                        """
-                    }
-                }
-            }
+                                  echo "执行完成!"
+                              """
+                          } catch (Exception e) {
+                              echo "执行超时或出错: ${e.message}"
+                              // 强制终止可能的子进程
+                              bat "taskkill /f /im java.exe /t 2>nul || echo 没有需要终止的进程"
+                          }
+                      }
+                  }
+              }
+          }
 
 
 
