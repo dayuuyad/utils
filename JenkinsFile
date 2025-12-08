@@ -25,6 +25,7 @@ pipeline {
                     withSonarQubeEnv('sonarqube') {
                         // 先打印环境变量
                         bat """
+                            echo "scannerHome: ${scannerHome}"
                             echo "SONAR_HOST_URL: %SONAR_HOST_URL%"
                             echo "当前工作目录: %cd%"
                             echo "测试网络连通性..."
