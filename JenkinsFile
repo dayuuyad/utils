@@ -7,11 +7,10 @@ pipeline {
 
                 script {
                     scannerHome = tool 'sonarqubeScanner'
-                    scannerPath = "${scannerHome}\\bin\\sonar-scanner.bat"
                 }
 
                 withSonarQubeEnv('sonarqube') {
-                    powershell 'scannerPath'
+                    powershell 'C:\ProgramData\Jenkins\.jenkins\tools\hudson.plugins.sonar.SonarRunnerInstallation\sonarqubeScanner\bin\sonar-scanner.bat'
                 }
 
 
