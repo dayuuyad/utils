@@ -10,20 +10,20 @@ pipeline {
                         def scannerHome = tool 'sonarqubeScanner'
 
                         // 方法1：直接使用系统命令
-                        bat """
+                        PowerShell  """
                             echo "方法1: 直接调用"
                             "${scannerHome}\\bin\\sonar-scanner.bat" --help
                         """
 
                         // 方法2：先进入目录再执行
-                        bat """
+                        PowerShell  """
                             echo "方法2: 切换目录"
                             cd /d "${scannerHome}\\bin"
                             sonar-scanner.bat -v
                         """
 
                         // 方法3：使用 call 命令
-                        bat """
+                        PowerShell  """
                             echo "方法3: 使用 call"
                             call "${scannerHome}\\bin\\sonar-scanner.bat" -v
                         """
