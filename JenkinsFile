@@ -11,7 +11,7 @@ pipeline {
             steps {
                 // 直接使用withSonarQubeEnv作为step
                 withSonarQubeEnv('sonarqube') {
-                    powershell 'mvn sonar:sonar'
+                    powershell '${SONAR_SCANNER}/bin/sonar-scanner'
                 }
             }
         }
