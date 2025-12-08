@@ -6,12 +6,8 @@ pipeline {
             stage('SonarQube Analysis') {
                 steps {
 
-                    script {
-                        scannerHome = tool 'sonarqubeScanner'
-                    }
-
                     withSonarQubeEnv('sonarqube') {
-                        bat 'C:\\ProgramData\\Jenkins\\.jenkins\\tools\\hudson.plugins.sonar.SonarRunnerInstallation\\sonarqubeScanner\\bin\\sonar-scanner.bat'
+                        powershell 'C:\\ProgramData\\Jenkins\\.jenkins\\tools\\hudson.plugins.sonar.SonarRunnerInstallation\\sonarqubeScanner\\bin\\sonar-scanner.bat'
                     }
 
 
