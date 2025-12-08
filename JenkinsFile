@@ -10,7 +10,7 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 // 直接使用withSonarQubeEnv作为step
-                withSonarQubeEnv('sonarqube-server') {
+                withSonarQubeEnv('sonarqube') {
                     powershell 'mvn sonar:sonar'
                 }
             }
