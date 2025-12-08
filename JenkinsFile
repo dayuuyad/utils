@@ -10,7 +10,10 @@ pipeline {
                 }
 
                 withSonarQubeEnv('sonarqube') {
-                    powershell '${env:scannerHome}/bin/sonar-scanner.bat'
+                    //powershell '${env:scannerHome}/bin/sonar-scanner.bat'
+                    powershell '''
+                        & "${scannerHome}\\bin\\sonar-scanner.bat"
+                    '''
                 }
 
 
