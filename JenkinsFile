@@ -4,36 +4,32 @@ pipeline {
     stages {
 
 
-        stage('SonarQube Analysis') {
-            steps {
-                timeout(time: 30, unit: 'MINUTES') {
-
+            stage('测试命令') {
+                steps {
                     script {
-                        // 1. 先检查 SonarScanner 是否存在
-                        def scannerHome = tool 'sonarqubeScanner'
+                        def scannerHome = tool 'SonarQubeScanner'
 
-                        // 2. 检查 SonarQube 环境变量是否注入
-                        withSonarQubeEnv('sonarqube') {
-                            // 先打印环境变量
-                            bat """
-                                echo "scannerHome: ${scannerHome}"
-                                echo "SONAR_HOST_URL: ${SONAR_HOST_URL}"
-                                echo "测试网络连通性..."
-                            """
+                        // 方法1：直接使用系统命令
+                        bat """
+                            echo "方法1: 直接调用"
+                            "${scannerHome}\\bin\\sonar-scanner.bat" --help
+                        """
 
-                            // 3. 先执行一个简单的命令测试
-                            bat "\"${scannerHome}\\bin\\sonar-scanner.bat\" -v"
+                        // 方法2：先进入目录再执行
+                        bat """
+                            echo "方法2: 切换目录"
+                            cd /d "${scannerHome}\\bin"
+                            sonar-scanner.bat -v
+                        """
 
-                            // 4. 简化扫描命令
-                            bat """
-                                "${scannerHome}\\bin\\sonar-scanner.bat" ^
-                                -X  # 启用调试模式
-                            """
-                        }
+                        // 方法3：使用 call 命令
+                        bat """
+                            echo "方法3: 使用 call"
+                            call "${scannerHome}\\bin\\sonar-scanner.bat" -v
+                        """
                     }
                 }
             }
-        }
 
 
 
