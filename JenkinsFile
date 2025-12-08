@@ -18,9 +18,9 @@ pipeline {
                             bat """
                                 echo "scannerHome: ${scannerHome}"
                                 echo "SONAR_HOST_URL: ${SONAR_HOST_URL}"
-                                echo "当前工作目录: %cd%"
+                                echo "当前工作目录: ${cd}"
                                 echo "测试网络连通性..."
-                                ping -n 3 %SONAR_HOST_URL%
+                                ping -n 3 ${SONAR_HOST_URL}
                             """
 
                             // 3. 先执行一个简单的命令测试
