@@ -1,75 +1,30 @@
 pipeline {
     agent any
 
-    // 第一步：查看你的 FreeStyle 项目配置，然后对应设置
-    environment {
-        // 从 FreeStyle 的构建环境中复制
-        BUILD_ID = "${env.BUILD_ID}"
-        WORKSPACE = "${env.WORKSPACE}"
-        JOB_NAME = "${env.JOB_NAME}"
-
-        // Sonar 配置（根据你的 FreeStyle 配置）
-        SONAR_PROJECT_KEY = 'test'
-        SONAR_PROJECT_NAME = 'test'
-    }
-
     stages {
-        stage('准备') {
+        stage('使用 PowerShell') {
             steps {
-                // 模拟 FreeStyle 的源码管理
-                checkout scm
+                // PowerShell 对特殊字符处理更好
+                powershell '''
+                    Write-Host "=== 使用 PowerShell ==="
+                    Write-Host "当前目录: $(Get-Location)"
+                    Write-Host "工作空间: $env:WORKSPACE"
 
-                // 模拟 FreeStyle 的环境准备
-                bat """
-                    echo "模拟 FreeStyle 环境..."
-                    echo "工作空间: %WORKSPACE%"
-                    echo "任务名称: %JOB_NAME%"
-                    cd /d "%WORKSPACE%"
-                    dir
-                """
+                    # 切换到工作目录
+                    Set-Location $env:WORKSPACE
+                    Write-Host "切换后: $(Get-Location)"
+
+                    # 列出文件
+                    Get-ChildItem
+
+                    # 检查 SonarScanner
+                    Get-Command sonar-scanner -ErrorAction SilentlyContinue
+                '''
+
+                // 或者混合使用
+                powershell 'Set-Location $env:WORKSPACE'
+                bat 'dir'
             }
-        }
-
-        stage('Sonar 分析') {
-            steps {
-                script {
-                    // 关键：直接使用 bat，不要用 script/tool 包装
-                    withSonarQubeEnv('sonarqube') {
-                        // 完全复制 FreeStyle 的 "Execute Windows batch command"
-                        bat """
-                            rem === 从 FreeStyle 复制的完整命令 ===
-                            rem 确保工作目录正确
-                            cd /d "%WORKSPACE%"
-
-                            rem 执行 SonarScanner（不要用变量，直接用命令）
-                            sonar-scanner ^
-                              -Dsonar.projectKey=%JOB_NAME% ^
-                              -Dsonar.projectName="%JOB_NAME%" ^
-                              -Dsonar.projectVersion=%BUILD_ID% ^
-                              -Dsonar.sources=src ^
-                              -Dsonar.java.binaries=target/classes ^
-                              -Dsonar.host.url=%SONAR_HOST_URL% ^
-                              -Dsonar.login=%SONAR_AUTH_TOKEN% ^
-                              -Dsonar.sourceEncoding=UTF-8
-
-                            rem 检查结果
-                            if exist ".scannerwork\\report-task.txt" (
-                                echo "✅ 扫描成功"
-                                type ".scannerwork\\report-task.txt"
-                            ) else (
-                                echo "❌ 扫描失败"
-                            )
-                        """
-                    }
-                }
-            }
-        }
-    }
-
-    post {
-        always {
-            // 模拟 FreeStyle 的后置操作
-            bat 'echo "构建完成: %BUILD_URL%"'
         }
     }
 }
