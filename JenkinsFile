@@ -11,7 +11,7 @@ pipeline {
             steps {
                 // 直接使用withSonarQubeEnv作为step
                 withSonarQubeEnv('sonarqube') {
-                    powershell '%SONAR_SCANNER_HOME%\\bin\\sonar-scanner.bat'
+                    powershell 'sonarqubeScanner\\bin\\sonar-scanner'
                 }
             }
         }
