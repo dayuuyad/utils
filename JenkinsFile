@@ -17,8 +17,7 @@ pipeline {
                             // 先打印环境变量
                             bat """
                                 echo "scannerHome: ${scannerHome}"
-                                echo "SONAR_HOST_URL: ${SONAR_HOST_URL}"
-                                echo "当前工作目录: ${cd}"
+                                echo "SONAR_HOST_URL: ${SONAR_HOST_URL}"                                
                                 echo "测试网络连通性..."
                                 ping -n 3 ${SONAR_HOST_URL}
                             """
@@ -28,10 +27,7 @@ pipeline {
 
                             // 4. 简化扫描命令
                             bat """
-                                "${scannerHome}\\bin\\sonar-scanner" ^
-                                -Dsonar.projectKey=test-project ^
-                                -Dsonar.sources=src ^
-                                -Dsonar.projectBaseDir=. ^
+                                "${scannerHome}\\bin\\sonar-scanner.bat" ^
                                 -X  # 启用调试模式
                             """
                         }
