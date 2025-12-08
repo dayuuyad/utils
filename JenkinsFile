@@ -9,9 +9,13 @@ pipeline {
         }
         stage('SonarQube Analysis') {
             steps {
+                script {
+                    scannerHome = tool 'sonarqubeScanner'
+                }
+                }
                 // 直接使用withSonarQubeEnv作为step
                 withSonarQubeEnv('sonarqube') {
-                    powershell 'sonarqubeScanner\\bin\\sonar-scanner'
+                    powershell '${scannerHome}\\bin\\sonar-scanner'
                 }
             }
         }
