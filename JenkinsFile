@@ -1,6 +1,11 @@
 pipeline {
     agent any
 
+    tools {
+        // 这里的名称要与Jenkins全局工具配置中的一致
+        sonarqubeScanner 'sonarqubeScanner'
+    }
+
     stages {
         stage('pull') {
             steps {
