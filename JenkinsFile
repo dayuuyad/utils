@@ -2,8 +2,6 @@ pipeline {
     agent any
 
     stages {
-        stage('SonarQube Analysis') {
-            steps {
             stage('pull') {
                 steps {
                     git credentialsId: '12ff5dee-66f5-4fcc-8f99-563f88813d2c', url: 'git@github.com:dayuuyad/utils.git'
@@ -17,16 +15,10 @@ pipeline {
             stage('SonarQube Analysis') {
                 steps {
 
-                script {
-                    scannerHome = tool 'sonarqubeScanner'
-                }
                     script {
                         scannerHome = tool 'sonarqubeScanner'
                     }
 
-                withSonarQubeEnv('sonarqube') {
-                    powershell 'C:\\ProgramData\\Jenkins\\.jenkins\\tools\\hudson.plugins.sonar.SonarRunnerInstallation\\sonarqubeScanner\\bin\\sonar-scanner.bat'
-                }
                     withSonarQubeEnv('sonarqube') {
                         powershell 'C:\\ProgramData\\Jenkins\\.jenkins\\tools\\hudson.plugins.sonar.SonarRunnerInstallation\\sonarqubeScanner\\bin\\sonar-scanner.bat'
                     }
@@ -34,7 +26,6 @@ pipeline {
 
                 }
             }
-        }
     }
     post {
       always {
@@ -43,5 +34,4 @@ pipeline {
             Check console output at $BUILD_URL to view the results.''', subject: '$PROJECT_NAME - Build # $BUILD_NUMBER - $BUILD_STATUS!', to: '904977900@qq.com'
       }
     }
-
 }
