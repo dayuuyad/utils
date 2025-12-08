@@ -7,13 +7,11 @@ pipeline {
 
                 script {
                     scannerHome = tool 'sonarqubeScanner'
+                    scannerPath = "${scannerHome}\\bin\\sonar-scanner.bat"
                 }
 
                 withSonarQubeEnv('sonarqube') {
-                    //powershell '${env:scannerHome}/bin/sonar-scanner.bat'
-                    powershell '''
-                        & "${scannerHome}\\bin\\sonar-scanner.bat"
-                    '''
+                    powershell 'scannerPath'
                 }
 
 
