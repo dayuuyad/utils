@@ -16,21 +16,31 @@ pipeline {
     stage('SonarQube Analysis') {
         steps {
             timeout(time: 30, unit: 'MINUTES') {
+
                 script {
-                    // 获取并打印工具路径
+                    // 1. 先检查 SonarScanner 是否存在
                     def scannerHome = tool 'sonarqubeScanner'
-                    echo "SonarScanner path: ${scannerHome}"
 
-                    // 添加详细日志
+                    // 2. 检查 SonarQube 环境变量是否注入
                     withSonarQubeEnv('sonarqube') {
+                        // 先打印环境变量
                         bat """
-                            echo "开始 SonarQube 扫描..."
-                            echo "项目路径: %cd%"
-                            echo "SonarScanner路径: ${scannerHome}"
+                            echo "SONAR_HOST_URL: %SONAR_HOST_URL%"
+                            echo "当前工作目录: %cd%"
+                            echo "测试网络连通性..."
+                            ping -n 3 %SONAR_HOST_URL%
+                        """
 
-                            "${scannerHome}\\bin\\sonar-scanner.bat"
+                        // 3. 先执行一个简单的命令测试
+                        bat "\"${scannerHome}\\bin\\sonar-scanner\" -v"
 
-                            echo "SonarQube 扫描完成"
+                        // 4. 简化扫描命令
+                        bat """
+                            "${scannerHome}\\bin\\sonar-scanner" ^
+                            -Dsonar.projectKey=test-project ^
+                            -Dsonar.sources=src ^
+                            -Dsonar.projectBaseDir=. ^
+                            -X  # 启用调试模式
                         """
                     }
                 }
