@@ -7,6 +7,11 @@ pipeline {
                 git credentialsId: '12ff5dee-66f5-4fcc-8f99-563f88813d2c', url: 'git@github.com:dayuuyad/utils.git'
             }
         }
+        stage('SonarQube Analysis') {
+            withSonarQubeEnv('sonarqube') {
+                powershell 'mvn sonar:sonar'
+            }
+        }
         stage('build') {
             steps {
                 powershell 'mvn clean package -DskipTests'
