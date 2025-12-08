@@ -7,7 +7,7 @@ pipeline {
             stage('测试命令') {
                 steps {
                     script {
-                        def scannerHome = tool 'SonarQubeScanner'
+                        def scannerHome = tool 'sonarqubeScanner'
 
                         // 方法1：直接使用系统命令
                         bat """
