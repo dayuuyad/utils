@@ -13,20 +13,32 @@ pipeline {
             }
         }
 
-        stage('SonarQube Analysis') {
-            steps {
-
+    stage('SonarQube Analysis') {
+        steps {
+            timeout(time: 30, unit: 'MINUTES') {
                 script {
-                    scannerHome = tool 'sonarqubeScanner'
+                    // 获取并打印工具路径
+                    def scannerHome = tool 'SonarQubeScanner'
+                    echo "SonarScanner path: ${scannerHome}"
+
+                    // 添加详细日志
+                    withSonarQubeEnv('sonarqube') {
+                        bat """
+                            echo "开始 SonarQube 扫描..."
+                            echo "项目路径: %cd%"
+                            echo "SonarScanner路径: ${scannerHome}"
+
+                            "${scannerHome}\\bin\\sonar-scanner.bat"
+
+                            echo "SonarQube 扫描完成"
+                        """
+                    }
                 }
-
-                withSonarQubeEnv('sonarqube') {
-                    bat '${scannerHome}/bin/sonar-scanner.bat'
-                }
-
-
             }
         }
+    }
+
+
 
     }
 
