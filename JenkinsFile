@@ -14,7 +14,7 @@ pipeline {
                 }
                 // 直接使用withSonarQubeEnv作为step
                 withSonarQubeEnv('sonarqube') {
-                    powershell '${scannerHome}\\bin\\sonar-scanner'
+                    bat '${scannerHome}/bin/sonar-scanner'
                 }
             }
         }
