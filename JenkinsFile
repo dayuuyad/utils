@@ -2,64 +2,49 @@ pipeline {
     agent any
 
     stages {
-        stage('pull') {
+
+
+        stage('SonarQube Analysis') {
             steps {
-                git credentialsId: '12ff5dee-66f5-4fcc-8f99-563f88813d2c', url: 'git@github.com:dayuuyad/utils.git'
-            }
-        }
-        stage('build') {
-            steps {
-                powershell 'mvn clean package -DskipTests'
-            }
-        }
+                timeout(time: 30, unit: 'MINUTES') {
 
-    stage('SonarQube Analysis') {
-        steps {
-            timeout(time: 30, unit: 'MINUTES') {
+                    script {
+                        // 1. 先检查 SonarScanner 是否存在
+                        def scannerHome = tool 'sonarqubeScanner'
 
-                script {
-                    // 1. 先检查 SonarScanner 是否存在
-                    def scannerHome = tool 'sonarqubeScanner'
+                        // 2. 检查 SonarQube 环境变量是否注入
+                        withSonarQubeEnv('sonarqube') {
+                            // 先打印环境变量
+                            bat """
+                                echo "scannerHome: ${scannerHome}"
+                                echo "SONAR_HOST_URL: %SONAR_HOST_URL%"
+                                echo "当前工作目录: %cd%"
+                                echo "测试网络连通性..."
+                                ping -n 3 %SONAR_HOST_URL%
+                            """
 
-                    // 2. 检查 SonarQube 环境变量是否注入
-                    withSonarQubeEnv('sonarqube') {
-                        // 先打印环境变量
-                        bat """
-                            echo "scannerHome: ${scannerHome}"
-                            echo "SONAR_HOST_URL: %SONAR_HOST_URL%"
-                            echo "当前工作目录: %cd%"
-                            echo "测试网络连通性..."
-                            ping -n 3 %SONAR_HOST_URL%
-                        """
+                            // 3. 先执行一个简单的命令测试
+                            bat "\"${scannerHome}\\bin\\sonar-scanner\" -v"
 
-                        // 3. 先执行一个简单的命令测试
-                        bat "\"${scannerHome}\\bin\\sonar-scanner\" -v"
-
-                        // 4. 简化扫描命令
-                        bat """
-                            "${scannerHome}\\bin\\sonar-scanner" ^
-                            -Dsonar.projectKey=test-project ^
-                            -Dsonar.sources=src ^
-                            -Dsonar.projectBaseDir=. ^
-                            -X  # 启用调试模式
-                        """
+                            // 4. 简化扫描命令
+                            bat """
+                                "${scannerHome}\\bin\\sonar-scanner" ^
+                                -Dsonar.projectKey=test-project ^
+                                -Dsonar.sources=src ^
+                                -Dsonar.projectBaseDir=. ^
+                                -X  # 启用调试模式
+                            """
+                        }
                     }
                 }
             }
         }
-    }
 
 
 
     }
 
-    post {
-      always {
-emailext body: '''$PROJECT_NAME - Build # $BUILD_NUMBER - $BUILD_STATUS:
 
-Check console output at $BUILD_URL to view the results.''', subject: '$PROJECT_NAME - Build # $BUILD_NUMBER - $BUILD_STATUS!', to: '904977900@qq.com'
-      }
-    }
 
 
 }
