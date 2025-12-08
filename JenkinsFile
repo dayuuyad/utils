@@ -2,29 +2,21 @@ pipeline {
     agent any
 
     stages {
-        stage('使用 PowerShell') {
+        stage('SonarQube Analysis') {
             steps {
-                // PowerShell 对特殊字符处理更好
-                powershell '''
-                    Write-Host "=== 使用 PowerShell ==="
-                    Write-Host "当前目录: $(Get-Location)"
-                    Write-Host "工作空间: $env:WORKSPACE"
 
-                    # 切换到工作目录
-                    Set-Location $env:WORKSPACE
-                    Write-Host "切换后: $(Get-Location)"
+                script {
+                    scannerHome = tool 'sonarqubeScanner'
+                }
 
-                    # 列出文件
-                    Get-ChildItem
+                withSonarQubeEnv('sonarqube') {
+                    powershell '${scannerHome}/bin/sonar-scanner.bat'
+                }
 
-                    # 检查 SonarScanner
-                    Get-Command sonar-scanner -ErrorAction SilentlyContinue
-                '''
 
-                // 或者混合使用
-                powershell 'Set-Location $env:WORKSPACE'
-                bat 'dir'
             }
         }
+
+    }
     }
 }
