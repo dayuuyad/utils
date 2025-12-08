@@ -7,7 +7,7 @@ pipeline {
           stage('SonarQube Analysis') {
               steps {
                   script {
-                      timeout(time: 10, unit: 'MINUTES') {
+                      timeout(time: 1, unit: 'MINUTES') {
                           try {
                               def scannerHome = tool 'sonarqubeScanner'
 
@@ -16,7 +16,7 @@ pipeline {
                                   echo "路径: ${scannerHome}"
 
                                   rem 设置超时和日志重定向
-                                  timeout /t 300 /nobreak > nul 2>&1
+                                  timeout /t 60 /nobreak > nul 2>&1
                                   call "${scannerHome}\\bin\\sonar-scanner.bat" -v
 
                                   echo "执行完成!"
