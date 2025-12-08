@@ -8,8 +8,11 @@ pipeline {
             }
         }
         stage('SonarQube Analysis') {
-            withSonarQubeEnv('sonarqube') {
-                powershell 'mvn sonar:sonar'
+            steps {
+                // 直接使用withSonarQubeEnv作为step
+                withSonarQubeEnv('sonarqube-server') {
+                    powershell 'mvn sonar:sonar'
+                }
             }
         }
         stage('build') {
