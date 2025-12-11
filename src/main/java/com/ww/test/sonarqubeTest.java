@@ -4,6 +4,6 @@ public class sonarqubeTest {
     public static void main(String[] args) {
         int a;
         a=10;
-        test;
+        int b= 100/0;
     }
 }
