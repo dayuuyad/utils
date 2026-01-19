@@ -9,7 +9,7 @@ pipeline {
             }
             stage('build') {
                 steps {
-                    powershell 'mvn clean package -DskipTests'
+                    sh 'mvn clean package -DskipTests'
                 }
             }
     }
