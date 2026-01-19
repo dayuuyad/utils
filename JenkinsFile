@@ -1,15 +1,6 @@
 pipeline {
     agent any
 
-    tools {
-        // 在 Jenkins 全局工具中配置
-        maven 'Maven-3.9.12'
-    }
-
-    environment {
-        // 或者直接设置 Maven 路径
-        MAVEN_HOME = tool name: 'Maven-3.9.12', type: 'maven'
-    }
     stages {
             stage('pull') {
                 steps {
@@ -18,7 +9,7 @@ pipeline {
             }
             stage('build') {
                 steps {
-                    sh '${MAVEN_HOME}/bin/mvn clean package -DskipTests'
+                    sh 'mvn clean package -DskipTests'
                 }
             }
     }
