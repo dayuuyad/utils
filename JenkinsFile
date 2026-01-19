@@ -1,6 +1,10 @@
 pipeline {
     agent any
-
+    environment {
+        // 设置 Maven 路径
+        MAVEN_HOME = '/var/jenkins_home/apache-maven-3.9.12'
+        PATH = "$MAVEN_HOME/bin:$PATH"
+    }
     stages {
             stage('pull') {
                 steps {
