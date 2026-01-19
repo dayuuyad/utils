@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    tools {
+        jdk 'JDK8'  // 使用配置的 JDK 8
+    }
     environment {
         // 设置 Maven 路径
         MAVEN_HOME = '/var/jenkins_home/apache-maven-3.9.12'
